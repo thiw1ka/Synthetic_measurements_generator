@@ -1,0 +1,50 @@
+<!-- launch synthetic_measurement_generator -->
+<launch>
+
+<!-- rosbags that include the vrpn topics -->
+
+<!-- <rosparam param = "pd_for_each_target"> [0.6, 0.5, 0.4, 0.3] </rosparam> -->
+<rosparam param = "pd_for_each_target"> [1.0, 1.0, 1.0, 1.0] </rosparam>
+<param    name  = "white_noise_cov"      type = "double"        value = "0.01"  /> <!-- this is for white noise generator -->
+<param    name  = "decay_amount"         type = "double"        value = "0.00"  /> <!-- if variable PD wanted over time steps. amont to reduced. pd <=0 is invalid -->
+<param    name  = "decay_time_duration"  type = "int"           value = "0"  /> <!-- duration for each pd reduction to occure -->
+<param    name  = "enable_blind_spot"    type = "bool"          value = "true" />
+
+<!-- params for blindspot -->
+<rosparam   command = "load"      file = "$(find synthetic_measurement_generator)/launch/blindspot_generrator_params.yaml"/>
+
+
+<node   name    = "Synthetic_measurement_raw_bag_node"
+        pkg     = "rosbag"
+        type    = "play"
+        args    = "-r 1.0 -s 500 -u 150 $(find rosbags_for_synthetic_measurements)/2020-02-27-20-50-12.bag"
+        required = "true"
+/>
+
+<node   name = "synthetic_measurement_generator_node" 
+        pkg     = "synthetic_measurement_generator" 
+        type    = "synthetic_measurement_generator_node" 
+        output  = "screen"
+/>
+
+<node   name    = "rviz_for_viz"     
+        pkg     = "rviz" 
+        type    = "rviz" 
+        args    = "-d $(find synthetic_measurement_generator)/vrpn_recording.rviz" 
+/>
+
+<node   pkg     = "tf2_ros" 
+        type    = "static_transform_publisher" 
+        name    = "link1_broadcaster" 
+        args    = "0 0 0 0 0 1.5708 world experiment" 
+/>
+
+<!-- <node   pkg     = "topic_tools" 
+        type    = "transform" 
+        name    = "robot_02_transform" 
+        args    = "0 0 0 0 0 1.5708 ugv02 world" 
+/> -->
+
+
+</launch>
+

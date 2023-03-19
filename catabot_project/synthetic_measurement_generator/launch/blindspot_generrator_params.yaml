@@ -1,0 +1,7 @@
+#params for blindspot generator
+fov_angle           : 15.0  #degrees
+effective_distance  : 2.0   # length of triangle side in m
+originX             : 0.0   # first corner x coordinate
+originY             : 0.0   # first corner y coordinate
+rate                : 0.5   # triangle rotation rate
+ang_increment       : 15.0   # triangle increment
